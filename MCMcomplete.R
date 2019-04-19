@@ -423,7 +423,7 @@ df
 plot(as.factor(df$CrisisDriverData.Data.FIPS_Combined))
 table(as.factor(df$CrisisDriverData.Data.FIPS_Combined))
 
-##########Complicated Shit#############
+##########Complicated#############
 # #Future Research
 # 
 # DrugSums <- matrix(,nrow = 461,ncol = 69)
@@ -460,30 +460,30 @@ data <- read_xlsx(file.choose())
 
 attach(data)
 
-fuck <- regsubsets(Odavg ~., data=data, nbest = 5)
+mods <- regsubsets(Odavg ~., data=data, nbest = 5)
 
-fuckp <- lm(Odavg ~ HC01_VC40 +HC01_VC53 +HC01_VC150+ HC01_VC161+
+full <- lm(Odavg ~ HC01_VC40 +HC01_VC53 +HC01_VC150+ HC01_VC161+
               HC01_VC166 +HC01_VC174+HC01_VC176 +HC01_VC188+ HC01_VC189+
               HC01_VC193+ HC01_VC198+ HC01_VC199 +HC01_VC201+
               HC01_VC203+ HC01_VC206+ HC01_VC208+HC01_VC209+HC01_VC210)
 
 par(mfrow = c(1,1))        
-plot(fuckp)
+plot(full)
 
-summary(fuckp)
-summary(fuck)$xnames
+summary(full)
+summary(full)$xnames
 regsub
-names(fuck)
-plot(fuck, scale="adjr2")
+names(full)
+plot(full, scale="adjr2")
 install.packages("leaps")
 library(leaps)
 
-shit <- lm(Odavg ~ HC01_VC150+HC01_VC161+HC01_VC166+HC01_VC176
+ODlm <- lm(Odavg ~ HC01_VC150+HC01_VC161+HC01_VC166+HC01_VC176
            +HC01_VC203+HC01_VC206+HC01_VC209+HC01_VC210, data=data)
 
-plot(shit)
+plot(ODlm)
 
-summary(shit)
+summary(ODlm)
 
 corre <- data.frame(round(cor(data),2))
 cor()

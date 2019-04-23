@@ -1,18 +1,16 @@
 #MCM 2019 
 #Biana Ramirez, Jade williams, and Austin Schenk 
 
-#####imorting data#####
+##### NFLS data#####
 Data <- read.csv(file.choose())
 View(Data)
 attach(Data)
 Data <- as.data.frame(Data)
 
 State <- as.factor(State)
-# 5 states
 COUNTY <- as.factor(COUNTY)
-# 358 Counties 
 SubstanceName <- as.factor(SubstanceName)
-# 69 Levels 
+
 YYYY <- as.factor(YYYY)
 FIPS_Combined <- as.factor(FIPS_Combined)
 levels(YYYY)
@@ -31,10 +29,9 @@ TDRS = TotalDrugReportsState #sum of all incidents for each state
 
 ##########Year specific Data###############
 
-#parsing the data by year
+#parsing by year
 
-#Data2010 = Data[YYYY[YYYY = 2010]] was only pulling mason, kY or 
-#nothing. Fixed with which command below...
+#Data2010 = Data[YYYY[YYYY = 2010]] was only pulling mason, kY or nothing. Fixed with which command below...
 Data2010 = Data[which(YYYY == "2010"),]
 Data2011 = Data[which(YYYY == "2011"),]
 Data2012 = Data[which(YYYY == "2012"),]
@@ -53,7 +50,6 @@ RateOI = numeric(length = 461)
 OI2010 <- numeric(length = 461)
 OI2017 <- numeric(length = 461)
 
-################# GOOD ####################
 ############# Rate of Change Opiate Incidents ###############
 CombinedCode
 x = 0
@@ -64,9 +60,11 @@ for (x in 0:460)
   RateOI[x] = OI2010[x]/OI2017[x]
   x = x+1
 }
+
 OIData <- data.frame(CombinedCode,OI2010,OI2017,RateOI)
 View(OIData)
-###################### Drug Incidences #####################
+
+###################### Drug Incidences (DI)#####################
 RateDI = numeric(length = 461)
 DI2010 <- numeric(length = 461)
 DI2017 <- numeric(length = 461)
@@ -79,7 +77,6 @@ for (x in 0:460)
   RateDI[x] = DI2010[x]/DI2017[x]
   x = x+1
 }
-#wHICH COMMAND DOES NOT NEED A COMMA IN A AGGREGATE FUNCTION 
 
 DIData <- data.frame(CombinedCode,DI2010,DI2017,RateDI)
 View(DIData)
@@ -92,6 +89,7 @@ for (x in 0:460)
   x = x+1
   }
 DI2012 <- numeric(length = 461)
+
 for (x in 0:460)
 {
   DI2012[x] = mean(Data$TotalDrugReportsCounty[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2012")])
@@ -103,25 +101,30 @@ for (x in 0:460)
   DI2013[x] = mean(Data$TotalDrugReportsCounty[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2013")])
   x = x+1
 }
+
 DI2014 <- numeric(length = 461)
 for (x in 0:460)
 {
   DI2014[x] = mean(Data$TotalDrugReportsCounty[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2014")])
   x = x+1
 }
+
 DI2015 <- numeric(length = 461)
 for (x in 0:460)
 {
   DI2015[x] = mean(Data$TotalDrugReportsCounty[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2015")])
   x = x+1
 }
+
 DI2016 <- numeric(length = 461)
 for (x in 0:460)
 {
   DI2016[x] = mean(Data$TotalDrugReportsCounty[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2016")])
   x = x+1
 }
+
 ########### OI for 2011-2016 #############
+
 OI2011 <- numeric(length = 461)
 for (x in 0:460)
 {
@@ -158,6 +161,7 @@ for (x in 0:460)
   OI2016[x] = sum(Data$DrugReports[which(Data$FIPS_Combined == CombinedCode[x] & YYYY == "2016")])
   x = x+1
 }
+
 ############## OD Ratios #########
 Diff_OIandDI <- RateDI - RateOI
 ODratio2010 <- OI2010/DI2010
@@ -175,6 +179,7 @@ ODratioAVG <- (ODratio2010+ODratio2011+ODratio2012+ODratio2013+
 Diff_OIandDI
 Movement
 ODratioAVG
+
 ############### Incident DATA #########
 IncidentData <- data.frame(CombinedCode,OI2010,OI2011,OI2012,OI2013,OI2014,OI2015,OI2016,OI2017,RateOI
                            ,DI2010,DI2011,DI2012,DI2013,DI2014,DI2015,DI2016,DI2017,RateDI,
@@ -283,7 +288,7 @@ DiffStatus
 ##########Average############
 IncidentData$ODratioAVG
 summary(IncidentData$ODratioAVG)
-#Changed!!
+
 IncidentData$ODratioAVG[is.na(IncidentData$ODratioAVG)] <- 0.36963
 i = 0
 ODStatus = numeric(length = 461)
@@ -294,12 +299,13 @@ for (i in 1:461)
   i = i+1
 }
 ODStatus 
+
 ###########Movement#######
 summary(IncidentData$Movement)
 quantile(IncidentData$Movement, .84, na.rm = T)
-#Changed!!
 IncidentData$Movement
 IncidentData$Movement[is.na(IncidentData$Movement)] <- 0.02016
+
 i = 0
 MoveStatus = numeric(length = 461)
 for (i in 1:461)
@@ -309,8 +315,8 @@ for (i in 1:461)
   i = i+1
 }
 MoveStatus 
-##########
 
+#####classification rules######
 i = 0
 Status = numeric(length = 461)
 for (i in 1:461)
@@ -347,9 +353,7 @@ length(Status[Status == "NR"])
 # lapply(x, library, character.only = T) # load the required packages
 
 ##########Drug Identification##############
-#WARNING!!!
-#WARNING!!!!!
-# THIS IS A GIANT LOOP AND TAKES FOREVER(20+ min) TO RUN!!!!!
+#this takes a long time to run.
 
 CompleteStatus <- numeric(length = 24062)
 i = 0
@@ -372,12 +376,12 @@ SubstanceData <- data.frame(Data$COUNTY
 View(SubstanceData)
 install.packages("xlsx")
 
-write.csv(SubstanceData, "c:/Users/bmg421/Desktop/SubstanceData.csv")
+write.csv(SubstanceData, file=)
 write.csv(IncidentData, "c:/Users/bmg421/Desktop/IncidentData.csv")
 
 ########Substance Driver finders#############
 
-SubstanceData <- read.csv("C:/Users/bmg421/Desktop/SubstanceData.csv")
+SubstanceData <- read.csv(file.choose())
 attach(SubstanceData)
 DriverData <- data.frame(SubstanceData, Data$DrugReports, Data$`O/D`, Data$TotalDrugReportsCounty, Data$TotalDrugReportsState)
 length(Drug)
@@ -493,7 +497,7 @@ ODneg <-as.vector(corre)
 
 
 library(readxl)
-final <- read_excel("C:/Users/bmg421/Downloads/final.xlsx")
+final <- read_excel(file.choose())
 View(final)
 
 

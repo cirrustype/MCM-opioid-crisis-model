@@ -15,6 +15,7 @@ YYYY <- as.factor(YYYY)
 FIPS_Combined <- as.factor(FIPS_Combined)
 levels(YYYY)
 dim(Data)
+
 ##############Data structure and renaming varaibles###########
 levels(COUNTY)
 County = unique(COUNTY)
@@ -376,8 +377,8 @@ SubstanceData <- data.frame(Data$COUNTY
 View(SubstanceData)
 install.packages("xlsx")
 
-write.csv(SubstanceData, file=)
-write.csv(IncidentData, "c:/Users/bmg421/Desktop/IncidentData.csv")
+write.csv(SubstanceData, file = file.choose(new = T))
+write.csv(IncidentData, file = file.choose(new = T))
 
 ########Substance Driver finders#############
 
